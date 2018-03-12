@@ -1,0 +1,11 @@
+{
+  "name": "dynamic-api-docs",
+  "version": "1.0.0",
+  "description": "Plugin For Dynamic Route Generator",
+  "main": "dynamic-api-docs.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jack Thomson <hello@jackthomson.co.uk> (http://www.jackthomson.co.uk)",
+  "license": "ISC"
+}
