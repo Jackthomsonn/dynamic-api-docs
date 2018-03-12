@@ -4,7 +4,7 @@ const path = require('path')
 
 class DynamicApiDocsPlugin {
   constructor() {
-    this.pluginName = 'Swagger Docs'
+    this.pluginName = 'Api Docs'
   }
 
   install(event) {
