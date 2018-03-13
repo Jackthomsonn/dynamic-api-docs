@@ -3,37 +3,39 @@ const fs = require('fs')
 const path = require('path')
 
 class DynamicApiDocsPlugin {
-  constructor() {
-    this.pluginName = 'Dynamic Api Docs'
+  static pluginInformation() {
+    return {
+      name: 'Dynamic Api Docs'
+    }
   }
 
-  install(event) {
-    event.emit('Plugin Installed', this.pluginName, this)
+  static install(event) {
+    event.emit('Plugin Installed', this.pluginInformation(), this)
   }
 
-  execute(thisParam) {
+  static apply(routeGenerator) {
     let template = `<!DOCTYPE html>
-    <html>
-    <head>
-      <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
-      <style>
-        * {
-          font-family: 'Roboto', sans-serif;
-        }
-        html, body {
-          background: #FFF;
-        }
-        p {
-          font-weight: 300;
-        }
-        .line {
-          background: #F2F2F2;
-          height: 1px;
-        }
-      </style>
+      <html>
+        <head>
+          <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
+          <style>
+            * {
+              font-family: 'Roboto', sans-serif;
+            }
+            html, body {
+              background: #FFF;
+            }
+            p {
+              font-weight: 300;
+            }
+            .line {
+              background: #F2F2F2;
+              height: 1px;
+            }
+          </style>
     </head>`
 
-    thisParam.options.routes.forEach((route, index) => {
+    routeGenerator.routes.forEach((route, index) => {
       const methods = route.methods
 
       methods.forEach(method => {
@@ -50,7 +52,7 @@ class DynamicApiDocsPlugin {
         </body>
         </html>`
 
-      if (index === thisParam.options.routes.length - 1) {
+      if (index === routeGenerator.routes.length - 1) {
         if (!fs.existsSync('api-docs')) {
           fs.mkdirSync('api-docs')
         }
