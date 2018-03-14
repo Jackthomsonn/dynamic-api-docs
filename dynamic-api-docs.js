@@ -3,17 +3,11 @@ const fs = require('fs')
 const path = require('path')
 
 class DynamicApiDocsPlugin {
-  static pluginInformation() {
-    return {
-      name: 'Dynamic Api Docs'
-    }
-  }
-
   static install(event) {
-    event.emit('Plugin Installed', this.pluginInformation(), this)
+    event.emit('Plugin Installed', this)
   }
 
-  static apply(routeGenerator) {
+  apply(routeGenerator) {
     let template = `<!DOCTYPE html>
       <html>
         <head>
@@ -48,9 +42,7 @@ class DynamicApiDocsPlugin {
           <h1>Route ${route.uri}</h1>
           ${methods.map(method => `<p>Method name <strong>${method.name.toUpperCase()}</strong></p> \
           <strong>Method description </strong>
-          <p>${method.description}</p><div class='line'></div>`).join('')}
-        </body>
-        </html>`
+          <p>${method.description}</p><div class='line'></div>`).join('')}`
 
       if (index === routeGenerator.routes.length - 1) {
         if (!fs.existsSync('api-docs')) {
@@ -60,6 +52,10 @@ class DynamicApiDocsPlugin {
         fs.writeFile('./api-docs/api-docs.html', template, () => {
           process.stdout.write(`\nAPI Docs have been created`)
         })
+      }
+
+      for (let key in route.model.schema.paths) {
+        template += `<strong>${key}</strong>`
       }
     })
   }
