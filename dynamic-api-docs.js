@@ -1,6 +1,4 @@
-const { EventEmitter } = require('events')
 const fs = require('fs')
-const path = require('path')
 
 class DynamicApiDocsPlugin {
   static install(event) {
@@ -42,20 +40,28 @@ class DynamicApiDocsPlugin {
           <h1>Route ${route.uri}</h1>
           ${methods.map(method => `<p>Method name <strong>${method.name.toUpperCase()}</strong></p> \
           <strong>Method description </strong>
-          <p>${method.description}</p><div class='line'></div>`).join('')}`
+          <p>${method.description}</p><div class='line'></div>`).join('')}
+          <h2>Model for ${route.uri}</h2>
+          `
+
+      for (let key in route.model.schema.paths) {
+        template += `
+        <p><strong>${route.model.schema.paths[key].path}</strong></p>
+        <p>Type: ${route.model.schema.paths[key].instance}</p>
+        <p>Required: ${route.model.schema.paths[key].options.required ? true : false}</p>
+        <div class='line'></div>
+        `
+      }
 
       if (index === routeGenerator.routes.length - 1) {
         if (!fs.existsSync('api-docs')) {
           fs.mkdirSync('api-docs')
         }
 
+
         fs.writeFile('./api-docs/api-docs.html', template, () => {
           process.stdout.write(`\nAPI Docs have been created`)
         })
-      }
-
-      for (let key in route.model.schema.paths) {
-        template += `<strong>${key}</strong>`
       }
     })
   }
