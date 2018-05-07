@@ -67,4 +67,4 @@ class DynamicApiDocsPlugin {
   }
 }
 
-module.exports = { DynamicApiDocsPlugin }
+module.exports = DynamicApiDocsPlugin
